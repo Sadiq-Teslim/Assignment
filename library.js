@@ -29,11 +29,17 @@ class Member {
         this.isMember = isMember;
     }
     validateMembership() {
-        return this.isMember;
+        if (!this.isMember) {
+            console.log(`${this.name} is not a valid member.`);
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }
 class Library {
-    constructor() {
+    constructor(books = [], members = []) {
         this.books = [];
         this.members = [];
         this.books = [];
@@ -47,13 +53,15 @@ class Library {
     }
     listAvailableBooks() {
         console.log("Available books:");
-        this.books.filter(b => b.isAvailable).forEach(b => {
+        this.books
+            .filter((b) => b.isAvailable)
+            .forEach((b) => {
             console.log(`- ${b.title} [${b.category}]`);
         });
     }
-    borrowBook(bookId, memberId) {
-        const book = this.books.find(b => b.id === bookId);
-        const member = this.members.find(m => m.membershipId === memberId);
+    borrowBook(bookId, membershipId) {
+        const book = this.books.find((b) => b.id === bookId);
+        const member = this.members.find((m) => m.membershipId === membershipId);
         if (book && (member === null || member === void 0 ? void 0 : member.validateMembership())) {
             book.borrow();
         }
@@ -64,10 +72,26 @@ class Library {
 }
 const nithubLibrary = new Library();
 const book1 = new Book(1, "The Great Gatsby", "Fiction");
-const book2 = new Book(2, "1984", "Dystopian");
+const book2 = new Book(2, "University Physics", "Education");
+const book3 = new Book(3, "The Catcher in the Rye", "Fiction");
 const member1 = new Member("Alice", "M001");
 const member2 = new Member("Bob", "M002");
 nithubLibrary.addBook(book1);
 nithubLibrary.addBook(book2);
 nithubLibrary.addMember(member1);
 nithubLibrary.addMember(member2);
+// Trying to Borrow a book
+console.log("\nBooks before borrowing:");
+nithubLibrary.borrowBook(2, "M002");
+// Available books after borrowing
+console.log("\nBooks after borrowing:");
+nithubLibrary.listAvailableBooks();
+// Trying to borrow the same book again
+console.log("\nTrying to borrow again:");
+nithubLibrary.borrowBook(2, "M002");
+// Returning the book
+console.log("\nBooks after returning:");
+book2.returnBook();
+//Checking available books again
+console.log("\nAvailable books after returning:");
+nithubLibrary.listAvailableBooks();
